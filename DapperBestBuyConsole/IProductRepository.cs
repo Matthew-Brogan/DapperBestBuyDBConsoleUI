@@ -8,5 +8,7 @@ namespace DapperBestBuyConsole
     {
         IEnumerable<Products> GetAllProducts();
         void InsertProducts(string name, int stock, int catid, decimal price, int onsale);
+        void DeleteProducts(int id);
+        void UpdateProducts(Products product);
     }
 }

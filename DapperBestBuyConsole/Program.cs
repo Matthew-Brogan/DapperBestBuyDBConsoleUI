@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Net;
+using System.Threading;
 
 namespace DapperBestBuyConsole
 {
@@ -46,11 +47,12 @@ namespace DapperBestBuyConsole
             #endregion
 
             DapperProductRepository prods = new DapperProductRepository(conn);
-            Console.WriteLine("Lets take a look at our products:");
+            Console.WriteLine("Lets take a look at our products: Press enter....");
+            Console.ReadLine();
 
             var stuff = prods.GetAllProducts();
             PrintProds(stuff);
-
+            #region AddProduct
             Console.WriteLine("Would you like to add a product?");
             var answer = Console.ReadLine();
 
@@ -73,6 +75,49 @@ namespace DapperBestBuyConsole
 
 
             }
+            #endregion
+
+
+            #region DeleteProduct
+            Console.WriteLine("Would you like to delete a product?");
+            var delete = Console.ReadLine();
+            if(delete == "yes")
+            {
+                Console.WriteLine("Please select a product to delete based on id number:");
+                Console.WriteLine("Press enter to view products......");
+                Console.ReadLine();
+                PrintProds(prods.GetAllProducts());
+                var chopped = int.Parse(Console.ReadLine());
+                prods.DeleteProducts(chopped);
+                PrintProds(prods.GetAllProducts());
+
+            }
+            
+            #endregion
+
+
+            Console.WriteLine("Would you like to update a product?");
+            var userSays = Console.ReadLine();
+            if(userSays == "yes")
+            {
+                Console.WriteLine();
+                Console.WriteLine("Please select the product by ID:");
+                var selectedProd = int.Parse(Console.ReadLine());
+                var prodToUpdate = prods.GetProducts(selectedProd);
+
+                Console.WriteLine("Please enter the products new name:");
+                prodToUpdate.Name = Console.ReadLine();
+                Console.WriteLine("Please enter the new price:");
+                prodToUpdate.Price = decimal.Parse(Console.ReadLine());
+                Console.WriteLine("Is this product on sale?\n : 0= no, 1= yes ");
+                prodToUpdate.OnSale = int.Parse(Console.ReadLine());
+
+                prods.UpdateProducts(prodToUpdate);
+
+
+                
+            }
+
 
             Console.WriteLine("Have a nice day!");
         }
@@ -88,8 +133,10 @@ namespace DapperBestBuyConsole
         {
             foreach(var pro in prods)
             {
-                Console.WriteLine($"Id: {pro.CategoryID} Name: {pro.Name} Stock: {pro.StockLevel} Sale: {pro.OnSale}");
+                Console.WriteLine($"Product ID: {pro.ProductID} \n Category Id: {pro.CategoryID}\n Name: {pro.Name} \nStock: {pro.StockLevel}\n Sale: {pro.OnSale}\n\n");
+                Thread.Sleep(20);
             }
         }
+        
     }
 }
